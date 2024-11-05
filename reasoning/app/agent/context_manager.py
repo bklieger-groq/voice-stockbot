@@ -1,7 +1,8 @@
 import contextvars
 from contextlib import contextmanager
 
-session_var = contextvars.ContextVar('session', default=None)
+session_var = contextvars.ContextVar("session", default=None)
+
 
 @contextmanager
 def set_session(session):
