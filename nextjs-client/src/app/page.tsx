@@ -6,16 +6,10 @@ import { useRef, useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
 import { jsx } from "react/jsx-runtime";
 import { MicVAD } from "@ricky0123/vad-web";
-import Cart from "./components/cart/Cart";
-import ProductDetails from "./components/product-details/ProductDetails";
-import OrderConfirmation from "./components/order-confirmation/OrderConfirmation";
-import styles from "./Home.module.css";
-import Menu from "./components/menu/Menu";
-import WelcomeScreen from "./components/welcome-screen/WelcomeScreen";
-import { BottomCTA } from "./components/base/Base";
-import PreInteractionComponent from "./components/pre-interaction-widget/PreInteractionComponent";
-import ChatWindow from "./components/chat-window/ChatWindow";
+
 import { SkinConfigurations } from "./types/skinConfig";
+
+import { SyncLoader, PulseLoader, ScaleLoader } from "react-spinners";
 
 import StockChart from "./components/tradingview/stock-chart";
 import StockPrice from "./components/tradingview/stock-price";
@@ -28,6 +22,11 @@ import StockNews from "./components/tradingview/stock-news";
 import StockScreener from "./components/tradingview/stock-screener";
 
 import xRxClient, { ChatMessage } from "../../../xrx-core/react-xrx-client/src";
+
+interface DataItem {
+  date: string;
+  value: number;
+}
 
 declare global {
   interface Window {
@@ -45,7 +44,7 @@ const NEXT_PUBLIC_UI_DEBUG_MODE =
   process.env.NEXT_PUBLIC_UI_DEBUG_MODE === "true";
 const TTS_SAMPLE_RATE = process.env.TTS_SAMPLE_RATE || "24000";
 const STT_SAMPLE_RATE = process.env.STT_SAMPLE_RATE || "16000";
-const NEXT_PUBLIC_GREETING_FILENAME = process.env.NEXT_PUBLIC_GREETING_FILENAME || "pizza-greeting.mp3";
+const NEXT_PUBLIC_GREETING_FILENAME = process.env.NEXT_PUBLIC_GREETING_FILENAME || "greeting.mp3";
   
 // see SkinConfigurations for available agents
 const NEXT_PUBLIC_AGENT = process.env.NEXT_PUBLIC_AGENT || "pizza-agent";
@@ -111,55 +110,43 @@ export default function Home() {
     startAgent();
     setCurrentPage("home");
   }
-
-  const handleMessageChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setMessage(event.target.value);
-  }
   
   const handleRecordClick = () => {
     toggleIsRecording();
   }
 
-  const handleSendMessage = () => {
-    sendMessage(message);
-    setMessage('');
-  }
+  const exportToCSV = (data: DataItem[], filename: string) => {
+    // Convert data array to CSV string
+    const csvRows = [];
+  
+    // Get headers (keys from the first object)
+    const headers = Object.keys(data[0]) as Array<keyof DataItem>;
 
-  const handleButtonClick = (buttonId: string, action: () => void) => {
-    setLoadingButtons((prevState) => ({ ...prevState, [buttonId]: true }));
-    action();
-  };
-
-  const showDetails = (element: any, productId: number) => {
-    handleButtonClick(`details-${productId}`, () => {
-      console.log("Showing details for product", productId);
-      sendAction("get_product_details", { product_id: productId });
-    });
-  };
-
-  const addToCart = (variantId: number, quantity: number) => {
-    handleButtonClick(`add-${variantId}`, () => {
-      console.log("Adding to cart:", variantId, quantity);
-      sendAction("add_item_to_cart", {
-        variant_id: variantId,
-        quantity: quantity
+    csvRows.push(headers.join(','));
+  
+    // Loop over the rows
+    for (const row of data) {
+      const values = headers.map((header: keyof DataItem) => {
+        const escaped = ('' + row[header]).replace(/"/g, '""');
+        return `"${escaped}"`;
       });
-    });
+      csvRows.push(values.join(','));
+    }
+  
+    // Create a Blob from the CSV string
+    const csvString = csvRows.join('\n');
+    const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
+  
+    // Create a link to trigger the download
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.href = url;
+    link.setAttribute('download', `${filename}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
-  const deleteFromCart = (element: any, variantId: number) => {
-    handleButtonClick(`delete-${variantId}`, () => {
-      console.log("Deleting from cart:", variantId);
-      sendAction("delete_item_from_cart", { variant_id: variantId });
-    });
-  };
-
-  const submitOrder = (element: any) => {
-    handleButtonClick("submit-order", () => {
-      console.log("Submitting order");
-      sendAction("submit_cart_for_order", {});
-    });
-  };
 
   const renderWidget = useCallback(() => {
     let widget:any = chatHistory.findLast(chat => chat.type === 'widget')?.message;
@@ -297,153 +284,109 @@ export default function Home() {
   }, [chatHistory]);
 
   return (
-    <main className={styles.mainContainer}>
-      {currentPage === "welcome" && (
-        <WelcomeScreen onStart={handleStartClick} config={skinConfig} />
-      )}
-      {currentPage === "home" && (
-        <>
-          <div className={styles.logoContainer}>
-            <motion.div
-              key={isAgentThinking ? "thinking" : "not-thinking"}
-              className={`${styles.logo} ${
-                isAgentThinking && !isAgentSpeaking ? styles.pulsating : ""
-              }`}
-              animate={isAgentThinking ? { scale: [1, 1.1, 1] } : { scale: 1 }}
-              transition={{ repeat: Infinity, duration: 1.5 }}
-            >
+    <main className="mainContainer">
+    {showStartButton && (
+      <div className="startButtonContainer">
+        <button className="widget-button" style={{padding: '10px 30px'}} onClick={handleStartClick}>Start</button>
+      </div>
+    )}
+    <div className="chatContainer flex-auto">
+      <div className={`iconContainer flex ${!isVoiceMode ? 'hidden' : ''}`}>
+        <SyncLoader
+                color={"#F15950"}
+                loading={isAgentSpeaking}
+                size={20}
+                />
+        <PulseLoader
+            color={"#F15950"}
+            loading={isAgentThinking}
+            size={20}
+            />
+
+        <div style={{
+          width: isAgentSpeaking || isAgentThinking ? '0px' : '50px',
+          height: isAgentSpeaking || isAgentThinking ? '0px' : '50px',
+          borderRadius: '50%',
+          backgroundColor: '#F15950',
+          transition: 'all 0.5s',
+          position: 'absolute',
+          left: '50%',
+          top: '40',
+          transform: isAgentSpeaking || isAgentThinking ? 'translate(-50%, 0) scale(0)' : 'translate(-50%, 0) scale(1)',
+          transformOrigin: 'center center'
+        }}></div>
+        
+      </div>
+      <div />
+<div className="chatMessageContainer flex">
+  <div className="widgetMessageContainer">
+    <div key="widget" className="chatMessage widgetMessage">
+    <div style={{
+      display: 'grid',
+      gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, calc(50% - 10px)), 1fr))',
+      gap: '1rem',
+      justifyContent: 'center',
+      alignContent: 'center',
+      width: '100vw',
+      // height: 'calc(100vh - 600px)',
+      padding: '3rem',
+      boxSizing: 'border-box',
+    }}
+    className="grid-container">
+      {renderWidget()}
+      </div>
+    </div>
+  </div>
+</div>
+    </div>
+    <div className='inputContainer'>
+      <div className='flex'>
+          <div className="textInputContainer" >
+            <div id='speechDetection' style={{ justifyContent: 'center' }}>
+              <ScaleLoader
+                className="voiceIndicator"
+                color={"rgb(var(--foreground-rgb))"}
+                loading={isUserSpeaking}
+                radius={10}
+                height={20}
+                width={20}
+                speedMultiplier={2}
+              />
+              <ScaleLoader
+                className="voiceIndicator"
+                color={"rgb(var(--foreground-rgb))"}
+                loading={!isUserSpeaking}
+                radius={5}
+                height={7}
+                width={20}
+                speedMultiplier={0.00001}
+              />
               <Image
-                src={skinConfig.logoSrc}
-                alt="Main Icon"
-                width={80}
-                height={80}
-              />
-            </motion.div>
-            {isAgentSpeaking && (
-              <motion.div
-                className={styles.talkingIndicator}
-                initial={{ scaleY: 0 }}
-                animate={{ scaleY: [0, 1, 0] }}
-                transition={{ repeat: Infinity, duration: 0.8 }}
-              />
-            )}
-          </div>
-          <motion.div
-            key={isVoiceMode ? "voice" : "chat"}
-            className={styles.interactionContainer}
-            initial={{ y: 0, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{
-              type: "inertia",
-              stiffness: 500,
-              damping: 25,
-              delay: 0.05,
-              bounce: 0.5,
-              mass: 1.2,
-              velocity: 2
-            }}
-          >
-            {isVoiceMode ? (
-              renderWidget(latestWidget)
-            ) : (
-              <ChatWindow
-                chatHistory={chatHistory}
-                isVoiceMode={isVoiceMode}
-                message={message}
-                handleMessageChange={(
-                  event: React.ChangeEvent<HTMLTextAreaElement>
-                ) => setMessage(event.target.value)}
-                handleSendMessage={handleSendMessage}
-              />
-            )}
-          </motion.div>
-
-          <motion.div
-            className={styles.controlContainer}
-            initial={{ y: 50, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{
-              type: "spring",
-              stiffness: 300,
-              damping: 30,
-              delay: 0.2
-            }}
-          >
-            {" "}
-            <div className={styles.listeningIndicatorContainer}>
-              {isUserSpeaking && (
-                <motion.div
-                  className={styles.listeningIndicator}
-                  initial={{ scaleY: 0 }}
-                  animate={{ scaleY: [0, 1, 0] }}
-                  transition={{ repeat: Infinity, duration: 0.8 }}
-                />
-              )}
-            </div>
-            <div className={styles.buttonsContainer}>
-              {NEXT_PUBLIC_UI_DEBUG_MODE && (
-                <motion.button
-                  className={styles.controlButton}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={toggleVoiceMode}
-                >
-                  <Image
-                    className={styles.controlIcon}
-                    src={
-                      isVoiceMode
-                        ? "/switch-to-chat-icon.svg"
-                        : "/switch-to-voice-icon.svg"
-                    }
-                    width={60}
-                    height={60}
-                    alt="Switch Mode Icon"
-                  />
-                  <span className={styles.controlLabel}>
-                    {isVoiceMode ? "Chat" : "Voice"}
-                  </span>
-                </motion.button>
-              )}
-              <motion.button
-                className={`${styles.controlButton} ${styles.endButton}`}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => window.location.reload()}
-              >
-                <Image
-                  className={styles.controlIcon}
-                  src="/end-call-icon.svg"
-                  width={NEXT_PUBLIC_UI_DEBUG_MODE ? 75 : 60}
-                  height={NEXT_PUBLIC_UI_DEBUG_MODE ? 75 : 60}
-                  alt="End Call Icon"
-                />
-                <span className={styles.controlLabel}>End</span>
-              </motion.button>
-              <motion.button
-                className={`${styles.controlButton} ${styles.muteButton}`}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+                className="micButton"
+                src={isRecording ? "/mic_on.svg" : "/mic_off.svg"}
+                width={50}
+                height={50}
+                alt="Microphone Icon"
                 onClick={handleRecordClick}
-              >
-                <Image
-                  className={styles.controlIcon}
-                  src={isRecording ? "/mic_on.svg" : "/mic_off.svg"}
-                  width={60}
-                  height={60}
-                  alt="Microphone Icon"
-                />
-
-                <span className={styles.controlLabel}>
-                  {isRecording ? "Mute" : "Unmute"}
-                </span>
-              </motion.button>
+                style={{ marginLeft: 'auto' }}
+              />
             </div>
-          </motion.div>
-        </>
-      )}
-      {currentPage === "order-confirmation" && (
-        <OrderConfirmation confirmation={JSON.parse(latestWidget!.details)} />
-      )}
-    </main>
-  );
+          </div>
+      </div>   
+      <div className='speechControls'>
+        {NEXT_PUBLIC_UI_DEBUG_MODE && (
+          <button className="modeButton" onClick={() => toggleVoiceMode()}>
+            <Image
+              src={isVoiceMode ? '/chat.svg' : '/mic_on.svg'} 
+              width={20} 
+              height={10} 
+              alt="Microphone Icon"
+            />
+            <span>{isVoiceMode ? 'Toggle to text mode' : 'Toggle to audio mode'}</span>
+          </button>
+        )}
+      </div>    
+    </div>
+  </main>
+);
 }
