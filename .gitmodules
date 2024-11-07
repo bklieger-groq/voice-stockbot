@@ -1,0 +1,3 @@
+[submodule "xrx-core"]
+	path = xrx-core
+	url = https://github.com/8090-inc/xrx-core.git
