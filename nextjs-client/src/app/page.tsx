@@ -14,11 +14,18 @@ import Menu from "./components/menu/Menu";
 import WelcomeScreen from "./components/welcome-screen/WelcomeScreen";
 import { BottomCTA } from "./components/base/Base";
 import PreInteractionComponent from "./components/pre-interaction-widget/PreInteractionComponent";
-// ======================
-// import PatientIntakeForm from "./components/patient-intake-form/PatientIntakeForm";
-// ======================
 import ChatWindow from "./components/chat-window/ChatWindow";
 import { SkinConfigurations } from "./types/skinConfig";
+
+import StockChart from "./components/tradingview/stock-chart";
+import StockPrice from "./components/tradingview/stock-price";
+import EtfHeatmap from "./components/tradingview/etf-heatmap";
+import MarketHeatmap from "./components/tradingview/market-heatmap";
+import MarketOverview from "./components/tradingview/market-overview";
+import MarketTrending from "./components/tradingview/market-trending";
+import StockFinancials from "./components/tradingview/stock-financials";
+import StockNews from "./components/tradingview/stock-news";
+import StockScreener from "./components/tradingview/stock-screener";
 
 import xRxClient, { ChatMessage } from "../../../xrx-core/react-xrx-client/src";
 
@@ -154,94 +161,132 @@ export default function Home() {
     });
   };
 
-  const renderWidget = useCallback(
-    (widget: any) => {
-      if (!widget) {
-        if (!NEXT_PUBLIC_AGENT) {
-          return null;
-        } else {
-          widget = {
-            type: "pre-interaction",
-            details: "{}"
-          };
-        }
-      }
+  const renderWidget = useCallback(() => {
+    let widget:any = chatHistory.findLast(chat => chat.type === 'widget')?.message;
+    let details: any;
+    if (!widget){
+      return null;
+    }
 
-      let details: any;
-      try {
-        details = JSON.parse(widget.details);
-      } catch (error) {
-        console.error(
-          "Error: Invalid JSON received for widget:",
-          JSON.stringify(error)
-        );
-        console.log(widget.details);
-        details = [];
-      }
+    try { 
+      details = JSON.parse(widget.details);
+    } catch (error) {
+      console.log("Error: we received invalid json for the widget.");
+      console.log(error);
+      console.log(widget.details);
+      details = [];
+    }
 
-      switch (widget.type) {
-        case "shopify-product-list":
-          return (
-            <Menu
-              products={details}
-              loadingButtons={loadingButtons}
-              showDetails={showDetails}
-            />
-          );
+    if (Array.isArray(details) && details.length > 0) {
 
-        case "shopify-product-details":
-          return (
-            <ProductDetails
-              loadingButtons={loadingButtons}
-              product={details}
-              add_to_cart={addToCart}
-              chatHistory={chatHistory}
-            />
-          );
+      return details.map((widget, index) => {
+        const { type, parameters, data } = widget;
+        console.log("Rendering widget: ",type,parameters,data);
 
-        case "shopify-cart-summary":
-          return (
-            <>
-              <Cart
-                cart={details}
-                loadingButtons={loadingButtons}
-                deleteAction={deleteFromCart}
-              />
-              <BottomCTA
-                onClick={submitOrder}
-                isDisabled={details.cart_summary.line_items.length === 0}
-                isLoading={loadingButtons["submit-order"]}
-              >
-                <span>ORDER NOW</span>
-                <Image
-                  src="/right-caret.svg"
-                  width={40}
-                  height={40}
-                  alt="Right Caret"
+        switch (type) {
+          case 'showStockPrice':
+            return (
+              <div key={`widget-${index}`} className="widget" id={`stock-price-${index}`}>
+                <StockPrice symbol={parameters.symbol} />
+              </div>
+            );
+          case 'showStockChart':
+            return (
+                <StockChart 
+                  symbol={parameters.symbol} 
+                  comparisonSymbols={parameters.comparisonSymbols}
                 />
-              </BottomCTA>
-            </>
-          );
+            );
+          case 'showStockFinancials':
+            return (
+                <StockFinancials symbol={parameters.symbol} />
+            );
+          case 'showStockNews':
+            return (
+              <div key={`widget-${index}`} className="widget" id={`stock-news-${index}`}>
+                <StockNews symbol={parameters.symbol} />
+              </div>
+            );
+          case 'showStockScreener':
+            return (
+              <div key={`widget-${index}`} className="widget" id={`stock-screener-${index}`}>
+                <StockScreener />
+              </div>
+            );
+          case 'showMarketOverview':
+            return (
+              <div key={`widget-${index}`} className="widget" id={`stock-market-overview-${index}`}>
+                <MarketOverview />
+              </div>
+            );
+          case 'showMarketHeatmap':
+            return (
+              <div key={`widget-${index}`} className="widget" id={`stock-market-heatmap-${index}`}>
+                <MarketHeatmap />
+              </div>
+            );
+          case 'showETFHeatmap':
+            return (
+              <div key={`widget-${index}`} className="widget" id={`stock-etf-heatmap-${index}`}>
+                <EtfHeatmap />
+              </div>
+            );
+          case 'showTrendingStocks':
+            return (
+              <div key={`widget-${index}`} className="widget" id={`stock-trending-stocks-${index}`}>
+                <MarketTrending />
+              </div>
+            );
+          case 'showInformation':
+            return (
+              <div key={`widget-${index}`} className="flex items-center justify-center min-h-[200px]">
+                <div className="p-6 rounded-lg shadow-lg max-w-md w-full text-center bg-white border-4 border-orange-500">
+                  <h2 className="text-xl font-bold mb-4">{parameters.title}</h2>
+                  <p className="text-gray-700">{parameters.content}</p>
+                </div>
+              </div>
+            );
+            case 'showSpreadsheet':
+      return (
+        <div key={`widget-${index}`} className="flex items-center justify-center min-h-[600px]">
+      <div className="rounded-lg max-w-4xl w-full bg-white">
+        <h2 className="text-xl font-bold mb-2 px-4 py-2 mt-10">
+          {parameters.symbol}{" "}{parameters.metric.charAt(0).toUpperCase() + parameters.metric.slice(1)}
+        </h2>
+        <button
+        onClick={() => exportToCSV(data, parameters.metric)}
+        className="mb-2 px-2 py-1 bg-gray-500 text-white rounded hover:bg-gray-700"
+      >
+        Download Spreadsheet
+      </button>
+        <div className="overflow-auto" style={{maxHeight: "60vh"}}>
+          <table className="min-w-[50%] text-sm text-left border border-gray-100">
+            <thead className="bg-gray-100 border-b border-gray-300">
+              <tr>
+                <th className="px-2 py-1 font-medium text-gray-700 border-r border-gray-300">Filing Date of 10Q</th>
+                <th className="px-2 py-1 font-medium text-gray-700">{parameters.metric.charAt(0).toUpperCase() + parameters.metric.slice(1)} Value</th>
+              </tr>
+            </thead>
+            <tbody>
+              {data.map((item: { date: string; value: number }, idx: number) => (
+                <tr key={idx} className="border-b border-gray-200">
+                  <td className="px-2 py-1 border-r border-gray-300">{item.date}</td>
+                  <td className="px-2 py-1">{item.value.toLocaleString()}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+      );
+          default:
+            return null;
+        }
+      });
+    }
+  }, [chatHistory]);
 
-        case "shopify-order-confirmation":
-          setCurrentPage("order-confirmation");
-          if (isRecording) {
-            // make sure we mute the mic when we show the order confirmation
-            handleRecordClick();
-          }
-          return null;
-        // ======================
-        // case "patient-information":
-        //   return <PatientIntakeForm details={details} />;
-        // ======================
-        case "pre-interaction":
-          return <PreInteractionComponent agentType={NEXT_PUBLIC_AGENT} />;
-        default:
-          return null;
-      }
-    },
-    [loadingButtons, latestWidget]
-  );
 
   useEffect(() => {
     const lastMessage = chatHistory.findLast((chat) => chat.type === "widget");
