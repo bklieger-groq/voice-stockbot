@@ -98,9 +98,9 @@ export default function Home() {
     startOnLoad: true,
     onSpeechStart: () => {
       console.log("User started talking");
-      // if (isRecording){
+      if (isRecording){
         setIsUserSpeaking(true);
-      // }
+      }
     },
     onSpeechEnd: () => {
       console.log("User stopped talking");
@@ -363,7 +363,7 @@ export default function Home() {
               <ScaleLoader
                 className="voiceIndicator"
                 color={"rgb(var(--foreground-rgb))"}
-                loading={isUserSpeaking}
+                loading={isRecording && isUserSpeaking}
                 radius={10}
                 height={20}
                 width={20}
@@ -372,7 +372,7 @@ export default function Home() {
               <ScaleLoader
                 className="voiceIndicator"
                 color={"rgb(var(--foreground-rgb))"}
-                loading={!isUserSpeaking}
+                loading={!isRecording || !isUserSpeaking}
                 radius={5}
                 height={7}
                 width={20}
