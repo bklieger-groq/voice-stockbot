@@ -2,8 +2,7 @@
 jsx;
 
 import Image from "next/image";
-import { useRef, useState, useEffect, useCallback, useMemo } from "react";
-import { motion } from "framer-motion";
+import { useMemo } from "react";
 import { jsx } from "react/jsx-runtime";
 import { useMicVAD } from "@ricky0123/vad-react"
 
@@ -21,7 +20,7 @@ import StockFinancials from "./components/tradingview/stock-financials";
 import StockNews from "./components/tradingview/stock-news";
 import StockScreener from "./components/tradingview/stock-screener";
 
-import xRxClient, { ChatMessage } from "../../../xrx-core/react-xrx-client/src";
+import xRxClient from "../../../xrx-core/react-xrx-client/src";
 
 interface DataItem {
   date: string;
@@ -61,27 +60,27 @@ export default function Home() {
     chatHistory,
     isAgentSpeaking,
     isAgentThinking,
-    isAudioPlaying,
+    // isAudioPlaying,
     showStartButton,
-    isAudioGenerationDone,
+    // isAudioGenerationDone,
 
     // Set functions
-    setIsRecording,
-    setIsVoiceMode,
+    // setIsRecording,
+    // setIsVoiceMode,
     setIsUserSpeaking,
-    setChatHistory,
-    setIsAgentSpeaking,
-    setIsAgentThinking,
-    setIsAudioPlaying,
-    setShowStartButton,
-    setIsAudioGenerationDone,
+    // setChatHistory,
+    // setIsAgentSpeaking,
+    // setIsAgentThinking,
+    // setIsAudioPlaying,
+    // setShowStartButton,
+    // setIsAudioGenerationDone,
 
     // Handler functions
     startAgent,
     toggleIsRecording,
     toggleVoiceMode,
-    sendMessage,
-    sendAction
+    // sendMessage,
+    // sendAction
 
   } = xRxClient({
     orchestrator_host: NEXT_PUBLIC_ORCHESTRATOR_HOST,
@@ -107,23 +106,10 @@ export default function Home() {
       setIsUserSpeaking(false);
     },
   })
-  
-  const [message, setMessage] = useState("");
-  const [latestWidget, setLatestWidget] = useState<{
-    type: string;
-    details: string;
-  } | null>(null);
-
-
-  const [loadingButtons, setLoadingButtons] = useState<{
-    [key: string]: boolean;
-  }>({});
-  const [currentPage, setCurrentPage] = useState("welcome");
 
   /* Click Handlers */
   const handleStartClick = () => {
     startAgent();
-    setCurrentPage("home");
   }
   
   const handleRecordClick = () => {
@@ -291,14 +277,6 @@ export default function Home() {
     }
   }, [chatHistory]);
 
-
-  useEffect(() => {
-    const lastMessage = chatHistory.findLast((chat) => chat.type === "widget");
-    if (lastMessage) {
-      setLatestWidget(lastMessage.message as any);
-    }
-    setLoadingButtons({});
-  }, [chatHistory]);
 
   return (
     <main className="mainContainer">
