@@ -2,7 +2,7 @@
 jsx;
 
 import Image from "next/image";
-import { useRef, useState, useEffect, useCallback } from "react";
+import { useRef, useState, useEffect, useCallback, useMemo } from "react";
 import { motion } from "framer-motion";
 import { jsx } from "react/jsx-runtime";
 import { useMicVAD } from "@ricky0123/vad-react"
@@ -107,7 +107,7 @@ export default function Home() {
       setIsUserSpeaking(false);
     },
   })
-
+  
   const [message, setMessage] = useState("");
   const [latestWidget, setLatestWidget] = useState<{
     type: string;
@@ -163,7 +163,9 @@ export default function Home() {
   };
 
 
-  const renderWidget = useCallback(() => {
+  const renderedWidgets = useMemo(() => {
+    console.log(JSON.stringify(chatHistory));
+
     let widget:any = chatHistory.findLast(chat => chat.type === 'widget')?.message;
     let details: any;
     if (!widget){
@@ -348,7 +350,7 @@ export default function Home() {
       boxSizing: 'border-box',
     }}
     className="grid-container">
-      {renderWidget()}
+      {renderedWidgets}
       </div>
     </div>
   </div>
