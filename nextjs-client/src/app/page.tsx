@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useRef, useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
 import { jsx } from "react/jsx-runtime";
-import { MicVAD } from "@ricky0123/vad-web";
+import { useMicVAD } from "@ricky0123/vad-react"
 
 import { SkinConfigurations } from "./types/skinConfig";
 
@@ -92,6 +92,21 @@ export default function Home() {
     stt_sample_rate: parseInt(STT_SAMPLE_RATE, 10),
     tts_sample_rate: parseInt(TTS_SAMPLE_RATE, 10),
   });
+
+  /* Voice Activity Detection */
+  useMicVAD({
+    startOnLoad: true,
+    onSpeechStart: () => {
+      console.log("User started talking");
+      // if (isRecording){
+        setIsUserSpeaking(true);
+      // }
+    },
+    onSpeechEnd: () => {
+      console.log("User stopped talking");
+      setIsUserSpeaking(false);
+    },
+  })
 
   const [message, setMessage] = useState("");
   const [latestWidget, setLatestWidget] = useState<{
