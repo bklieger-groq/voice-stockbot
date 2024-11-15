@@ -10,6 +10,8 @@ import { SkinConfigurations } from "./types/skinConfig";
 
 import { SyncLoader, PulseLoader, ScaleLoader } from "react-spinners";
 
+import { Header } from "./components/header"
+
 import StockChart from "./components/tradingview/stock-chart";
 import StockPrice from "./components/tradingview/stock-price";
 import EtfHeatmap from "./components/tradingview/etf-heatmap";
@@ -280,6 +282,7 @@ export default function Home() {
 
   return (
     <main className="mainContainer">
+      <Header />
     {showStartButton && (
       <div className="startButtonContainer">
         <button className="widget-button" style={{padding: '10px 30px'}} onClick={handleStartClick}>Start</button>
