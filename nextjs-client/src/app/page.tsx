@@ -337,7 +337,7 @@ export default function Home() {
   </div>
 </div>
     </div>
-    <div className='inputContainer'>
+    <div className="inputContainer border-t bg-gradient-to-b from-white/80 via-white/95 to-white backdrop-blur-xl">
       <div className='flex'>
           <div className="textInputContainer" >
             <div id='speechDetection' style={{ justifyContent: 'center' }}>

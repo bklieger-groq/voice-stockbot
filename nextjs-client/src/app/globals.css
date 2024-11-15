@@ -67,7 +67,7 @@ td {
 
 .iconContainer {
   position: fixed;
-  top: 30px;
+  top: 50px;
   left: 0;
   right: 0;
   /* background: var(--header-gradient); */
@@ -139,25 +139,24 @@ td {
 
 .chatContainer {
   display: flex;
-  flex-direction: column-reverse;
+  flex-direction: column;
   justify-content: flex-start;
   overflow-y: scroll;
   overflow-x: hidden;
-  margin-bottom: 120px;
+  margin-bottom: 20px;
   padding-left: 10px;
   padding-right: 10px;
-  background-color: rgb(var(--background-rgb));
+  background-color: #F9F9FA;
   scrollbar-color: rgb(var(--grey-rgb)) rgb(var(--background-rgb)); /* Two valid colors*/
 }
 
 .inputContainer {
-  background-color: var(--background-start-rgb);
   padding: 0.625em;
   position: fixed;
   left:0;
   bottom:0;
   right:0;
-  height: 120px;
+  /* height: 120px; */
 }
 
 .textInputBox {
@@ -235,8 +234,7 @@ td {
 
 /****** Widget *******/
 .widgetMessageContainer {
-  max-height: 90%;
-  margin-top: 10%;
+  /* margin-top: 10%; */
   overflow: scroll;
   /* Existing: */
   width: 100%;
@@ -246,10 +244,10 @@ td {
 
 .widgetMessage {
   color: rgb(var(--foreground-rgb));
-  background-color: rgb(var(--background-rgb));
   text-align: center;
   margin-top: 10px;
   margin-bottom: 20px;
+  margin-top: 30px;
 }
 
 #speechDetection {

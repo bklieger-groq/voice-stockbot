@@ -9,10 +9,11 @@ import {
   IconSeparator
 } from './ui/icons'
 
-async function UserOrLogin() {
+export function Header() {
   return (
-    <>
-      <Link href="https://wow.groq.com/groq-labs/" rel="nofollow">
+    <header className="sticky top-0 z-50 flex items-center justify-between w-full h-16 px-4 border-b shrink-0 bg-gradient-to-b from-background/10 via-background/50 to-background/80 backdrop-blur-xl">
+      <div className="flex items-center">
+        <Link href="https://wow.groq.com/groq-labs/" rel="nofollow">
         <Image
           src="/groqlabs-logo-black.png"
           alt="GroqLabs Logo"
@@ -23,7 +24,10 @@ async function UserOrLogin() {
 
       <div className="flex items-center font-semibold">
         <IconSeparator className="size-6 text-muted-foreground/50" />
-        <a href="/new">StockBot</a>
+        <a href="/">StockBot</a>
+        <span className="ml-2 px-2 py-0.5 text-xs font-medium rounded-md border border-orange-600 bg-orange-100 text-orange-700">
+          BETA
+        </span>
         <IconSeparator className="size-6 text-muted-foreground/50" />
         <a
           href="/new"
@@ -34,17 +38,6 @@ async function UserOrLogin() {
           <span className="flex">Start New Chat</span>
         </a>
       </div>
-    </>
-  )
-}
-
-export function Header() {
-  return (
-    <header className="sticky top-0 z-50 flex items-center justify-between w-full h-16 px-4 border-b shrink-0 bg-gradient-to-b from-background/10 via-background/50 to-background/80 backdrop-blur-xl">
-      <div className="flex items-center">
-        <React.Suspense fallback={<div className="flex-1 overflow-auto" />}>
-          <UserOrLogin />
-        </React.Suspense>
       </div>
       <div className="flex items-center justify-end space-x-2">
         <a
