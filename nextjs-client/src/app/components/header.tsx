@@ -30,17 +30,18 @@ export function Header() {
         </span>
         <IconSeparator className="size-6 text-muted-foreground/50" />
         <a
-          href="/new"
+          href="/"
           rel="noopener noreferrer"
           className={cn(buttonVariants({ variant: 'ghost' }))}
           style={{ borderRadius: 0, color: '#F55036', padding: '4px' }}
+          onClick={() => window.location.reload()}
         >
           <span className="flex">Start New Chat</span>
         </a>
       </div>
       </div>
       <div className="flex items-center justify-end space-x-2">
-        <a
+        {/* <a
           target="_blank"
           href="https://github.com/bklieger-groq/voice-stockbot/"
           rel="noopener noreferrer"
@@ -49,7 +50,13 @@ export function Header() {
         >
           <IconGitHub />
           <span className="hidden ml-2 md:flex">GitHub</span>
-        </a>
+        </a> */}
+        <div className="flex items-center justify-end space-x-2">
+          <div className="p-2.5 rounded-md bg-background/50 backdrop-blur-sm text-right">
+            <div className="text-sm font-medium">Built by @BenjaminKlieger on X</div>
+            <div className="text-xs text-muted-foreground mt-0.5">Open Source Coming Soon, Follow for Updates</div>
+          </div>
+        </div>
       </div>
     </header>
   )

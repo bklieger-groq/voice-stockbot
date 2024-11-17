@@ -286,6 +286,7 @@ export default function Home() {
     {showStartButton && (
       <div className="startButtonContainer">
         <button className="widget-button" style={{padding: '10px 30px'}} onClick={handleStartClick}>Start</button>
+        <div className="text-xs font-light" style={{color:"grey", textAlign: "center", marginTop: "10px"}}>StockBot may provide inaccurate information <br /> and does not provide investment advice.</div>
       </div>
     )}
     <div className="chatContainer flex-auto">
