@@ -41,7 +41,7 @@ export function Header() {
       </div>
       </div>
       <div className="flex items-center justify-end space-x-2">
-        {/* <a
+        <a
           target="_blank"
           href="https://github.com/bklieger-groq/voice-stockbot/"
           rel="noopener noreferrer"
@@ -50,13 +50,8 @@ export function Header() {
         >
           <IconGitHub />
           <span className="hidden ml-2 md:flex">GitHub</span>
-        </a> */}
-        <div className="flex items-center justify-end space-x-2">
-          <div className="p-2.5 rounded-md bg-background/50 backdrop-blur-sm text-right">
-            <div className="text-sm font-medium">Built by @BenjaminKlieger on X</div>
-            <div className="text-xs text-muted-foreground mt-0.5">Open Source Coming Soon, Follow for Updates</div>
-          </div>
-        </div>
+        </a>
+
       </div>
     </header>
   )

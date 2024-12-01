@@ -285,7 +285,14 @@ td {
   padding: 8px;
   font-weight: 400;
   font-size: 0.9em;
-  font-weight: 600;
+}
+
+.enter-button {
+  color: rgb(var(--background-rgb)); 
+  background-color: #F15950;
+  border-color: #F15950;
+  border-radius: 10px;
+  font-weight: 400;
 }
 
 .button {
@@ -345,7 +352,7 @@ td {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  z-index: 1000;
+  z-index: 10;
 }
 .startButton {
   padding: 10px 20px;
