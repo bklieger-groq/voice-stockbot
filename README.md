@@ -3,7 +3,7 @@
  <img src="https://i.imgur.com/f1C7EdN.png" alt="AI Voice StockBot Powered by Groq with Tool Use and Generative UI" width="250">
  <br>
  <br>
-Voice Stockbot: Talk to Alice, a Voice Agent Powered by Groq that Provides Live Stock Information and Generates Real Stock Charts, Spreadsheets, and More!
+Talk to Alice, a Voice Agent Powered by Groq that Provides Live Stock Information with Interactive Charts, Spreadsheets, and More!
 
  <br>
 </h2>
