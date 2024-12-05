@@ -18,6 +18,10 @@ Voice Stockbot: Talk to Alice, a Voice Agent Powered by Groq that Provides Live 
 
 <br>
 
+
+https://github.com/user-attachments/assets/3bcd4562-5a14-42fd-a89c-164bccdf76d5
+
+
 ## Overview
 
 Voice StockBot is an AI-powered voice chatbot that leverages 8090's xRx framework, Whisper and Llama3 70b on Groq, TTS on Elevenlabs, Polygon.io's stock API, and TradingView’s live widgets to respond in conversation with the user with live, interactive charts and interfaces specifically tailored to your requests. Groq's speed makes tool calling and providing a response near instantaneous, allowing for a sequence of two API calls with separate specialized prompts to return a response.
@@ -32,3 +36,4 @@ Voice StockBot is an AI-powered voice chatbot that leverages 8090's xRx framewor
 - 🔄 **Adaptive Interface**: Dynamically render TradingView UI components for financial interfaces tailored to your specific query
 - ⚡ **Groq-Powered Performance**: Leverage Groq's cutting-edge inference technology for near-instantaneous responses and seamless user experience
 - 🌐 **Multi-Asset Market Coverage**: Access comprehensive data and analysis across stocks, forex, bonds, and cryptocurrencies
+
