@@ -44,29 +44,41 @@ Voice StockBot is an AI-powered voice chatbot that leverages 8090's xRx framewor
 | **Financial Data in Spreadsheets**<br>Create spreadsheets of financial data for any public company | ![Financial Data](https://github.com/user-attachments/assets/697adbbe-98a8-4ba2-a412-0e291e0d5aff) |
 | **Compare Price History of Company With Industry Competitors**<br>Track and compare the historical prices of companies in the same industry together. | ![Price History of Stocks](https://github.com/user-attachments/assets/27fe8f31-a64f-4cb7-8f48-c64589400cd1) |
 | **Heatmap of Daily Market Performance**<br>Visualize market trends at a glance with an interactive heatmap. | ![Heatmap of Daily Market Performance](https://github.com/user-attachments/assets/3e22d79b-b07c-4f9a-bc59-c93d6c27c3da) |
-## Quickstart (To-do)
+
+## Quickstart
 
 > [!IMPORTANT]
-> To use StockBot, you can use a hosted version at [groq-stockbot.vercel.app](https://groq-stockbot.vercel.app/).
-> Alternatively, you can run StockBot locally using the quickstart instructions.
+> To use StockBot, you can use a hosted version at [coming soon](/#).
+> Alternatively, you can run Voice StockBot locally using the quickstart instructions.
 
+1. **Clone the Repository**
+   ```bash
+   git clone --recursive https://github.com/bklieger-groq/voice-stockbot.git
+   ```
+   *The recursive flag ensures the xRx library is downloaded as well.*
 
-You will need a Groq API Key to run the application. You can obtain one [here on the Groq console](https://console.groq.com/keys).
+2. **Create File for Environment Variables**
+   ```bash
+   cp env-example.txt .env
+   ```
 
-To get started locally, you can run the following:
+3. **Configure API Keys**
+   - Add your Groq API key to `.env`:
+     ```
+     LLM_API_KEY="your_groq_api_key_here"
+     GROQ_STT_API_KEY="your_groq_api_key_here"
+     ```
+   - Configure TTS settings with your preferred provider (e.g., ElevenLabs)
+   
+   *You can obtain a Groq API key from the [Groq console](https://console.groq.com/keys)*
 
-```bash
-cp .env.example .env.local
-```
+4. **Run the Application**
+   ```bash
+   docker-compose up --build
+   ```
 
-Add your Groq API key to .env.local, then run:
+Your application will be available at [localhost:3000](http://localhost:3000/).
 
-```bash
-pnpm install
-pnpm dev
-```
-
-Your app should now be running on [localhost:3000](http://localhost:3000/).
 
 ## Changelog
 
