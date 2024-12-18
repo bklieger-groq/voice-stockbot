@@ -39,12 +39,11 @@ Voice StockBot is an AI-powered voice chatbot that leverages 8090's xRx framewor
 ## Example Interfaces
 | Description | Widget |
 |-------------|--------|
-| **Heatmap of Daily Market Performance**<br>Visualize market trends at a glance with an interactive heatmap. | ![Heatmap of Daily Market Performance](https://github.com/user-attachments/assets/3e22d79b-b07c-4f9a-bc59-c93d6c27c3da) |
 | **Breakdown of Financial Data for Stocks**<br>Get detailed financial metrics and key performance indicators for any stock. | ![Breakdown of Financial Data for Stocks](https://github.com/user-attachments/assets/272dfae2-4911-43c1-8fdc-e7af0fa9ff1d) |
 | **Show Current Price of Stocks**<br>Track and compare the price of stocks over the past day. | ![Price of Stocks](https://github.com/user-attachments/assets/eaf06277-ed76-4220-a164-a06d878bacbd) |
+| **Financial Data in Spreadsheets**<br>Create spreadsheets of financial data for any public company | ![Financial Data](https://github.com/user-attachments/assets/697adbbe-98a8-4ba2-a412-0e291e0d5aff) |
 | **Compare Price History of Company With Industry Competitors**<br>Track and compare the historical prices of companies in the same industry together. | ![Price History of Stocks](https://github.com/user-attachments/assets/27fe8f31-a64f-4cb7-8f48-c64589400cd1) |
-| **Financial Data in Spreadsheets**<br>Create spreadsheets of financial data for any public company | ![Financial Data](https://github.com/user-attachments/assets/9e9d16af-7948-4536-b6f9-c16877750614) |
-
+| **Heatmap of Daily Market Performance**<br>Visualize market trends at a glance with an interactive heatmap. | ![Heatmap of Daily Market Performance](https://github.com/user-attachments/assets/3e22d79b-b07c-4f9a-bc59-c93d6c27c3da) |
 ## Quickstart (To-do)
 
 > [!IMPORTANT]
