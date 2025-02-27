@@ -5,8 +5,8 @@ import logging
 import redis
 import copy
 
-from agent_framework import observability_decorator
-from agent_framework import initialize_llm_client
+from xrx_agent_framework.xrx_agent_framework import observability_decorator
+from xrx_agent_framework.xrx_agent_framework import initialize_llm_client
 from .context_manager import set_session, session_var
 from .utils.stock_utils import (
     get_stock_fundamentals,

@@ -28,6 +28,8 @@ SHOPIFY_SHOP_GID="your_shopify_shop_gid"
 SHOPIFY_STORE_INFO="your_store_description"
 SHOPIFY_CUSTOMER_SERVICE_TASK="Description of what the agent will do, e.g., assist customers, process orders..."
 
+# === Stockbot ===
+POLYGON_API_KEY="your_polygon_api_key_here"
 
 # =============================================
 # Customize your configuration below
